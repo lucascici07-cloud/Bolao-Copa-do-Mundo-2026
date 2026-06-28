@@ -983,7 +983,12 @@ async function fbSaveRealResults(){
 async function fbPullRealResults(){
   const rr = await fbGet('bolao2026/realResults');
   const sc = await fbGet('bolao2026/scores');
-  if(rr) AppState.realResults = rr;
+  if(rr){
+    if(rr.groups && Object.keys(rr.groups).length) AppState.realResults.groups = rr.groups;
+    if(rr.bestThirds && rr.bestThirds.length) AppState.realResults.bestThirds = rr.bestThirds;
+    if(rr.bracket) AppState.realResults.bracket = rr.bracket;
+    if(rr.topScorer !== undefined) AppState.realResults.topScorer = rr.topScorer;
+  }
   if(sc) Object.assign(AppState.scores, sc);
 }
 
@@ -2310,6 +2315,26 @@ function renderRules(){
 // ===================== INIT =====================
 
 loadState();
+
+// Resultados reais — Fase de Grupos Copa do Mundo 2026 (encerrada em 27/06/2026)
+if(!AppState.realResults) AppState.realResults = {groups:{},bestThirds:[],bracket:{r32:[],r16:[],qf:[],sf:[],champion:''},topScorer:''};
+AppState.realResults.groups = {
+  A:{first:'México',       second:'África do Sul',    third:'Coreia do Sul',    fourth:'Tchéquia'},
+  B:{first:'Suíça',        second:'Canadá',           third:'Bósnia-Herzegovina',fourth:'Catar'},
+  C:{first:'Brasil',       second:'Marrocos',         third:'Escócia',          fourth:'Haiti'},
+  D:{first:'EUA',          second:'Austrália',        third:'Paraguai',         fourth:'Turquia'},
+  E:{first:'Alemanha',     second:'Costa do Marfim',  third:'Equador',          fourth:'Curaçao'},
+  F:{first:'Holanda',      second:'Japão',            third:'Suécia',           fourth:'Tunísia'},
+  G:{first:'Bélgica',      second:'Egito',            third:'Irã',              fourth:'Nova Zelândia'},
+  H:{first:'Espanha',      second:'Cabo Verde',       third:'Uruguai',          fourth:'Arábia Saudita'},
+  I:{first:'França',       second:'Noruega',          third:'Senegal',          fourth:'Iraque'},
+  J:{first:'Argentina',    second:'Áustria',          third:'Argélia',          fourth:'Jordânia'},
+  K:{first:'Colômbia',     second:'Portugal',         third:'Rep. Dem. Congo',  fourth:'Uzbequistão'},
+  L:{first:'Inglaterra',   second:'Croácia',          third:'Gana',             fourth:'Panamá'}
+};
+AppState.realResults.bestThirds = ['Rep. Dem. Congo','Suécia','Equador','Gana','Bósnia-Herzegovina','Argélia','Paraguai','Senegal'];
+saveState();
+
 initFirebase();
 renderEntry();
 </script>
